@@ -3,16 +3,12 @@ import { injectResponsivePanel } from '../inject';
 
 describe('ResponsivePanel', () => {
   beforeEach(() => {
-    // Clear DOM
     document.body.innerHTML = '';
-
-    // Reset environment
     process.env.NODE_ENV = 'development';
   });
 
   afterEach(() => {
-    // Clean up any instances
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test('should create instance with default config', () => {
@@ -20,6 +16,7 @@ describe('ResponsivePanel', () => {
     expect(panel).toBeDefined();
     expect(panel).toBeInstanceOf(ResponsivePanel);
   });
+
   test('should create instance with custom config', () => {
     const config = {
       breakpoints: [320, 768, 1024],
@@ -32,16 +29,20 @@ describe('ResponsivePanel', () => {
     expect(panel).toBeDefined();
     panel.destroy();
   });
+
   test('should not initialize in production mode', () => {
     process.env.NODE_ENV = 'production';
-    const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+    const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
     const panel = new ResponsivePanel();
     expect(panel).toBeDefined();
-    expect(consoleSpy).toHaveBeenCalledWith('ResponsivePanel: Skipping initialization in production mode');
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'ResponsivePanel: Skipping initialization in production mode'
+    );
 
     consoleSpy.mockRestore();
   });
+
   test('should have open/close methods', () => {
     const panel = new ResponsivePanel();
     expect(typeof panel.open).toBe('function');
@@ -60,6 +61,7 @@ describe('ResponsivePanel', () => {
     expect(typeof panel.on).toBe('function');
     expect(typeof panel.off).toBe('function');
   });
+
   test('should have destroy method', () => {
     const panel = new ResponsivePanel();
     expect(typeof panel.destroy).toBe('function');
@@ -79,6 +81,7 @@ describe('injectResponsivePanel', () => {
   beforeEach(() => {
     process.env.NODE_ENV = 'development';
   });
+
   test('should inject panel in development mode', () => {
     const panel = injectResponsivePanel();
     expect(panel).toBeInstanceOf(ResponsivePanel);
@@ -87,14 +90,17 @@ describe('injectResponsivePanel', () => {
 
   test('should not inject panel in production mode', () => {
     process.env.NODE_ENV = 'production';
-    const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+    const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
     const panel = injectResponsivePanel();
     expect(panel).toBeNull();
-    expect(consoleSpy).toHaveBeenCalledWith('ResponsivePanel: Skipping initialization in production mode');
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'ResponsivePanel: Skipping initialization in production mode'
+    );
 
     consoleSpy.mockRestore();
   });
+
   test('should inject panel with custom config', () => {
     const config = {
       breakpoints: [320, 768],

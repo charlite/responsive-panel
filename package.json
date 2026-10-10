@@ -1,16 +1,17 @@
 {
   "name": "responsive-panel",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A development tool that helps frontend developers visualize and test responsive design breakpoints in real-time",
   "type": "module",
-  "main": "dist/index.js",
+  "sideEffects": false,
+  "main": "dist/index.cjs",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.esm.js",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     }
   },
   "files": [
@@ -20,9 +21,14 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "rollup -c",
-    "test": "jest",
-    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "build": "rollup -c && tsc --emitDeclarationOnly",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "node scripts/lint.cjs \"src/**/*.{ts,tsx}\"",
+    "lint:fix": "node scripts/lint.cjs \"src/**/*.{ts,tsx}\" --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
     "typecheck": "tsc --noEmit",
     "dev": "pwsh -ExecutionPolicy Bypass -File scripts/dev.ps1",
     "dev:test": "pwsh -ExecutionPolicy Bypass -File scripts/dev.ps1 -Task test",
@@ -39,14 +45,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xarlizard/responsive-panel.git"
+    "url": "git+https://github.com/charlite/responsive-panel.git"
   },
   "publishConfig": {
     "access": "public"
   },
-  "homepage": "https://github.com/xarlizard/responsive-panel#readme",
+  "homepage": "https://github.com/charlite/responsive-panel#readme",
   "bugs": {
-    "url": "https://github.com/xarlizard/responsive-panel/issues"
+    "url": "https://github.com/charlite/responsive-panel/issues"
   },
   "keywords": [
     "responsive",
@@ -68,21 +74,29 @@
     "angular"
   ],
   "author": {
-    "name": "Xarlizard",
-    "url": "https://github.com/xarlizard"
+    "name": "charlite",
+    "email": "38315638+charlite@users.noreply.github.com",
+    "url": "https://github.com/charlite"
   },
   "license": "MIT",
+  "engines": {
+    "node": ">=26.0.0"
+  },
   "devDependencies": {
-    "@rollup/plugin-typescript": "^12.3.0",
-    "@types/jest": "^30.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.49.0",
-    "@typescript-eslint/parser": "^8.49.0",
-    "eslint": "^9.39.2",
-    "jest": "^30.2.0",
-    "jest-environment-jsdom": "^30.2.0",
-    "rollup": "^4.53.3",
-    "ts-jest": "^29.4.6",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.0",
+    "@vitest/coverage-v8": "^5.0.3",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.12.0",
+    "jsdom": "^27.0.0",
+    "prettier": "^3.6.2",
+    "rollup": "^4.52.0",
+    "rollup-plugin-esbuild": "^6.2.1",
     "tslib": "^2.8.1",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.2",
+    "typescript-6": "npm:typescript@6.0.3",
+    "typescript-eslint": "^8.46.0",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.3"
   }
 }

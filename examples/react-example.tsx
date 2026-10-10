@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { injectResponsivePanel } from "responsive-panel";
+import { injectResponsivePanel } from 'responsive-panel';
 
 const App: React.FC = () => {
   const [count, setCount] = useState(0);

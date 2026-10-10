@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-10-10
+
+### Changed
+
+- CommonJS build output is now `dist/index.cjs` (was `dist/index.js`).
+- Migrated test runner from Jest to Vitest with jsdom.
+- Upgraded toolchain: TypeScript 7, ESLint 10 flat config, Rollup 4 + esbuild, Node.js 26+.
+- Updated repository branding and ownership references to [@charlite](https://github.com/charlite).
+
+### Added
+
+- CI workflow with coverage, install smoke tests, and Codecov upload.
+- Prettier formatting scripts and `.nvmrc` for Node 26.
+
 ## [1.0.1] - 2025-12-14
 
 ### Changed

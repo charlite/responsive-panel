@@ -1,29 +1,25 @@
-import typescript from "@rollup/plugin-typescript";
+import esbuild from 'rollup-plugin-esbuild';
 
 export default {
-  input: "src/index.ts",
+  input: 'src/index.ts',
   output: [
     {
-      file: "dist/index.js",
-      format: "cjs",
+      file: 'dist/index.cjs',
+      format: 'cjs',
       sourcemap: true,
-      exports: "named",
+      exports: 'named',
     },
     {
-      file: "dist/index.esm.js",
-      format: "esm",
+      file: 'dist/index.esm.js',
+      format: 'esm',
       sourcemap: true,
     },
   ],
   external: [],
   plugins: [
-    typescript({
-      tsconfig: "./tsconfig.json",
-      declaration: true,
-      declarationDir: "dist",
-      declarationMap: true,
-      sourceMap: true,
-      inlineSources: false,
+    esbuild({
+      target: 'es2022',
+      tsconfig: './tsconfig.json',
     }),
   ],
 };

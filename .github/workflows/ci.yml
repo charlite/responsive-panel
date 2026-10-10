@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js 26
+        uses: actions/setup-node@v7
+        with:
+          node-version: '26'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run type checking
+        run: npm run typecheck
+
+      - name: Run tests
+        run: npm run test:coverage
+
+      - name: Build package
+        run: npm run build
+
+      - name: Test package installation (CommonJS)
+        run: |
+          cd $(mktemp -d)
+          npm init -y
+          echo '{"type": "commonjs"}' > package.json
+          npm install $GITHUB_WORKSPACE
+          export PKG_NAME=$(node -p "require('$GITHUB_WORKSPACE/package.json').name")
+          echo "📦 Testing CommonJS import for package: $PKG_NAME"
+
+          node -e "
+            const pkgName = process.env.PKG_NAME;
+            try {
+              const pkg = require(pkgName);
+              console.log('✅ CommonJS import successful');
+              console.log('Package exports:', Object.keys(pkg));
+            } catch (error) {
+              console.log('❌ CommonJS import failed:', error.message);
+              process.exit(1);
+            }
+          "
+
+      - name: Test package installation (ES Module)
+        run: |
+          cd $(mktemp -d)
+          npm init -y
+          echo '{"type": "module"}' > package.json
+          npm install $GITHUB_WORKSPACE
+          export PKG_NAME=$(node -p "require('$GITHUB_WORKSPACE/package.json').name")
+          echo "📦 Testing ES Module import for package: $PKG_NAME"
+
+          node -e "
+            const pkgName = process.env.PKG_NAME;
+            import(pkgName).then(pkg => {
+              console.log('✅ ES Module import successful');
+              console.log('Package exports:', Object.keys(pkg));
+            }).catch(error => {
+              console.log('❌ ES Module import failed:', error.message);
+              process.exit(1);
+            });
+          "
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v7
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false

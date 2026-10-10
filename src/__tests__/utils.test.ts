@@ -8,7 +8,7 @@ import {
   generateId,
   clamp,
   deepMerge,
-  formatBytes
+  formatBytes,
 } from '../utils';
 
 describe('Utils', () => {
@@ -44,8 +44,9 @@ describe('Utils', () => {
   });
 
   describe('throttle', () => {
-    test('should throttle function calls', (done) => {
-      const mockFn = jest.fn();
+    test('should throttle function calls', async () => {
+      vi.useFakeTimers();
+      const mockFn = vi.fn();
       const throttledFn = throttle(mockFn, 100);
 
       throttledFn();
@@ -54,17 +55,17 @@ describe('Utils', () => {
 
       expect(mockFn).toHaveBeenCalledTimes(1);
 
-      setTimeout(() => {
-        throttledFn();
-        expect(mockFn).toHaveBeenCalledTimes(2);
-        done();
-      }, 150);
+      await vi.advanceTimersByTimeAsync(150);
+      throttledFn();
+      expect(mockFn).toHaveBeenCalledTimes(2);
+      vi.useRealTimers();
     });
   });
 
   describe('debounce', () => {
-    test('should debounce function calls', (done) => {
-      const mockFn = jest.fn();
+    test('should debounce function calls', async () => {
+      vi.useFakeTimers();
+      const mockFn = vi.fn();
       const debouncedFn = debounce(mockFn, 100);
 
       debouncedFn();
@@ -73,12 +74,12 @@ describe('Utils', () => {
 
       expect(mockFn).toHaveBeenCalledTimes(0);
 
-      setTimeout(() => {
-        expect(mockFn).toHaveBeenCalledTimes(1);
-        done();
-      }, 150);
+      await vi.advanceTimersByTimeAsync(150);
+      expect(mockFn).toHaveBeenCalledTimes(1);
+      vi.useRealTimers();
     });
   });
+
   describe('isProduction', () => {
     const originalEnv = process.env.NODE_ENV;
 
@@ -94,13 +95,14 @@ describe('Utils', () => {
     test('should return false in development', () => {
       process.env.NODE_ENV = 'development';
       expect(isProduction()).toBe(false);
-    }); test.skip('should return false for localhost', () => {
+    });
+
+    test.skip('should return false for localhost', () => {
       process.env.NODE_ENV = 'production';
 
-      // Mock location.hostname using jest.spyOn
-      const locationSpy = jest.spyOn(window, 'location', 'get').mockReturnValue({
+      const locationSpy = vi.spyOn(window, 'location', 'get').mockReturnValue({
         ...window.location,
-        hostname: 'localhost'
+        hostname: 'localhost',
       });
 
       expect(isProduction()).toBe(false);
@@ -108,6 +110,7 @@ describe('Utils', () => {
       locationSpy.mockRestore();
     });
   });
+
   describe('getTheme', () => {
     test('should return specified theme', () => {
       expect(getTheme('light')).toBe('light');
@@ -115,8 +118,7 @@ describe('Utils', () => {
     });
 
     test('should return system preference for auto', () => {
-      // Mock matchMedia for this test
-      const mockMatchMedia = jest.fn().mockImplementation(query => ({
+      const mockMatchMedia = vi.fn().mockImplementation((query: string) => ({
         matches: query === '(prefers-color-scheme: dark)',
       }));
 
@@ -150,7 +152,9 @@ describe('Utils', () => {
       expect(clamp(-5, 0, 10)).toBe(0);
       expect(clamp(15, 0, 10)).toBe(10);
     });
-  }); describe('deepMerge', () => {
+  });
+
+  describe('deepMerge', () => {
     test('should merge objects deeply', () => {
       const target = {
         a: 1,
