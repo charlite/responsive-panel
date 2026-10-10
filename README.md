@@ -130,7 +130,7 @@ pnpm add responsive-panel --save-dev
 ### GitHub Packages
 
 ```bash
-npm install @xarlizard/responsive-panel
+npm install responsive-panel
 ```
 
 > **Note**: For GitHub Packages, you'll need to configure your `.npmrc` file. See [PUBLISHING.md](./PUBLISHING.md) for details.
@@ -419,4 +419,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Made with ❤️ by [Xarlizard](https://github.com/xarlizard)
+Made with ❤️ by [charlite](https://github.com/charlite)

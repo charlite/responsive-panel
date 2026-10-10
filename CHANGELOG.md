@@ -5,6 +5,61 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-10-10
+
+### Changed
+
+- CommonJS build output is now `dist/index.cjs` (was `dist/index.js`).
+- Migrated test runner from Jest to Vitest with jsdom.
+- Upgraded toolchain: TypeScript 7, ESLint 10 flat config, Rollup 4 + esbuild, Node.js 26+.
+- Updated repository branding and ownership references to [@charlite](https://github.com/charlite).
+
+### Added
+
+- CI workflow with coverage, install smoke tests, and Codecov upload.
+- Prettier formatting scripts and `.nvmrc` for Node 26.
+
+## [1.0.1] - 2025-12-14
+
+### Changed
+
+- **Dependency updates** - Updated all npm dependencies to latest versions.
+
+- **TypeScript configuration** - Modernized TypeScript compiler options:
+  - Target updated to ES2022 for better modern JavaScript support
+  - Module resolution changed to "bundler" for better compatibility
+  - Added stricter type checking: `noUnusedLocals`, `noUnusedParameters`, `noImplicitReturns`
+  - Added `declarationMap` for better IDE support and debugging
+
+- **Build configuration** - Enhanced Rollup configuration:
+  - Added declaration maps for better source mapping
+  - Improved source map generation
+
+### Improved
+
+- **Code optimizations** with modern JavaScript/TypeScript features:
+  - Implemented optional chaining (`?.`) and nullish coalescing (`??`) throughout codebase
+  - Added `AbortController` for better event listener cleanup
+  - Enhanced `throttle` function with improved timeout-based scheduling
+  - Enhanced `debounce` function with cancel method support
+  - Replaced deprecated `substr` with `slice` method
+  - Optimized position calculation with object lookup instead of switch statement
+  - Improved DOM element removal using modern `.remove()` method
+  - Added `once: true` option for event listeners where appropriate
+  - Improved type safety in utility functions
+
+- **Code quality**:
+  - Removed unused variables and properties
+  - Fixed code formatting issues
+  - Improved type safety throughout the codebase
+  - Better error handling and edge case coverage
+
+### Fixed
+
+- Fixed missing space before constructor in `panel.ts`
+- Fixed potential null reference issues with optional chaining
+- Improved type definitions for better type inference
+
 ## [1.0.0] - 2025-07-13
 
 ### Added
